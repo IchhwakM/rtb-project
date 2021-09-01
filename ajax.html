@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ajax-api</title>
+    <style>
+      @keyframes first {
+        0% {
+          transform: rotateY(0deg);
+        }
+        100% {
+          transform: rotateY(360deg);
+        }
+      }
+
+      #main-container {
+        font-weight: bolder;
+        font-size: smaller;
+        font-size-adjust: inherit;
+        height: 100px;
+        width: 100px;
+        margin: 20px;
+        position: relative;
+        transform-style: preserve-3d;
+        perspective: 9000px;
+        transform-origin: center;
+        animation: first linear 5s infinite reverse;
+      }
+      p {
+        width: 90px;
+        background-color: none;
+        text-align: center;
+        position: relative;
+        color: white;
+      }
+      .api-div {
+        height: 100px;
+        width: 100px;
+        position: absolute;
+        border-radius: 40%;
+      }
+      .first {
+        border: 2px solid black;
+        background-color: dodgerblue;
+        transform: translateZ(50px);
+      }
+      .second {
+        border: 2px solid black;
+        background-color: dodgerblue;
+        transform: rotateY(90deg) translateZ(50px);
+      }
+      .third {
+        border: 2px solid black;
+        background-color: dodgerblue;
+        transform: rotateY(-90deg) translateZ(50px);
+      }
+      .fourth {
+        border: 2px solid black;
+        background-color: dodgerblue;
+        transform: rotateY(-180deg) translateZ(50px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main-container">
+      <div class="api-div first" id="face-one">
+        <p>Loding..</p>
+      </div>
+      <div class="api-div second" id="face-two">
+        <p>Loading..</p>
+      </div>
+      <div class="api-div third" id="face-three">
+        <p>Loading..</p>
+      </div>
+      <div class="api-div fourth" id="face-four">
+        <p>Loading..</p>
+      </div>
+    </div>
+
+    <script>
+      fetch("https://api.covid19api.com/summary")
+        .then((apidata) => {
+          return apidata.json();
+        })
+        .then((actualdata) => {
+          const mydata = actualdata.Countries[76];
+          console.log(mydata);
+          respData(
+            mydata["Country"],
+            mydata["NewConfirmed"],
+            mydata.NewDeaths,
+            mydata.TotalConfirmed,
+            mydata.TotalDeaths
+          );
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      function respData(a, b, c, d, e) {
+        document.getElementById(
+          "face-one"
+        ).innerHTML = `<p>Country:<br />${a}<br /> New cases: ${b} </p>`;
+        document.getElementById(
+          "face-two"
+        ).innerHTML = `<p>Country:<br />${a}<br /> New Deaths: ${c} </p>`;
+        document.getElementById(
+          "face-three"
+        ).innerHTML = `<p>Country:<br />${a}<br /> Total cases: ${d} </p>`;
+        document.getElementById(
+          "face-four"
+        ).innerHTML = `<p>Country:<br />${a}<br /> Total Deaths: ${e} </p>`;
+      }
+    </script>
+  </body>
+</html>
